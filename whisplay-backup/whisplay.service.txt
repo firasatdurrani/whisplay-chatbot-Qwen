@@ -1,0 +1,24 @@
+[Unit]
+Description=Whisplay AI Chatbot
+After=network-online.target sound.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/whisplay-ai-chatbot
+
+# Explicit PATH so systemd sees whisper and piper exactly like your SSH shell
+Environment="PATH=/home/pi/.local/bin:/home/pi/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Optional safety check: fail early if whisper is not visible
+ExecStartPre=/usr/bin/env PATH=/home/pi/.local/bin:/home/pi/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin which whisper
+
+# Run exactly the same script you run manually
+ExecStart=/usr/bin/env PATH=/home/pi/.local/bin:/home/pi/.nvm/versions/node/v20.19.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /usr/bin/bash -c 'cd /home/pi/whisplay-ai-chatbot && bash run_chatbot.sh'
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

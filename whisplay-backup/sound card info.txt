@@ -1,0 +1,10 @@
+**** List of PLAYBACK Hardware Devices ****
+card 0: vc4hdmi0 [vc4-hdmi-0], device 0: MAI PCM i2s-hifi-0 [MAI PCM i2s-hifi-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 1: vc4hdmi1 [vc4-hdmi-1], device 0: MAI PCM i2s-hifi-0 [MAI PCM i2s-hifi-0]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 2: wm8960soundcard [wm8960-soundcard], device 0: 1f000a0000.i2s-wm8960-hifi wm8960-hifi-0 [1f000a0000.i2s-wm8960-hifi wm8960-hifi-0]
+  Subdevices: 0/1
+  Subdevice #0: subdevice #0

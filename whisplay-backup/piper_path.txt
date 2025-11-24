@@ -1,0 +1,10 @@
+ls -lh ~/.local/bin/piper
+ls -lh ~/piper
+/home/pi/.local/bin/piper
+-rwxrwxr-x 1 pi pi 213 Nov 23 14:34 /home/pi/.local/bin/piper
+total 212K
+drwxrwxr-x 2 pi pi 4.0K Nov 23 15:15 models
+lrwxrwxrwx 1 pi pi   25 Nov 23 15:59 piper -> /home/pi/.local/bin/piper
+-rw-rw-r-- 1 pi pi  80K Nov 23 16:25 test_again.wav
+-rw-rw-r-- 1 pi pi 121K Nov 23 15:59 test_whisplay.wav
+drwxrwxr-x 2 pi pi 4.0K Nov 23 15:59 voices

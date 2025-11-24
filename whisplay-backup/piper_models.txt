@@ -1,0 +1,10 @@
+/home/pi/piper
+/home/pi/piper/test_again.wav
+/home/pi/piper/piper
+/home/pi/piper/test_whisplay.wav
+/home/pi/piper/models
+/home/pi/piper/models/en_GB-semaine-medium.onnx.json
+/home/pi/piper/models/en_GB-semaine-medium.onnx
+/home/pi/piper/voices
+/home/pi/piper/voices/en_US-amy-medium.onnx
+/home/pi/piper/voices/en_US-amy-medium.onnx.json
