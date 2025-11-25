@@ -8,6 +8,7 @@ SSH into a fresh Raspberry Pi OS from a mac and run:
 Install Instructions:
 ***************************************************
 
+```
 sudo apt update && sudo apt install -y git
 cd ~
 git clone https://github.com/firasatdurrani/whisplay-chatbot-Qwen.git
