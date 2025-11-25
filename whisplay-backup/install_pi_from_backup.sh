@@ -27,6 +27,8 @@ sudo apt install -y \
   python3 python3-pip python3-venv \
   ffmpeg sox alsa-utils \
  libportaudio2 libasound2-plugins
+ python3-opencv python3-cairosvg \
+  fonts-dejavu-core
 
 #-----------------------------
 # 1.B. Whisplay HAT audio driver (WM8960)
@@ -161,7 +163,11 @@ python3 -m pip install --break-system-packages openai-whisper piper-tts soundfil
 if [ -f requirements.txt ]; then
     python3 -m pip install --break-system-packages -r requirements.txt
 fi
-
+# Ensure cairosvg is importable (fallback to pip if Debian package missing)
+if ! python3 -c "import cairosvg" >/dev/null 2>&1; then
+    echo ">> cairosvg not found in system packages, installing via pip..."
+    python3 -m pip install --break-system-packages cairosvg
+fi
 
 #-----------------------------
 # 5.B. Piper CLI + voice model
@@ -245,3 +251,27 @@ echo "  sudo systemctl status whisplay.service"
 echo
 echo "If .env has API keys, open it once to confirm they're correct:"
 echo "  nano ~/whisplay-ai-chatbot/.env"
+
+
+
+#-----------------------------
+# X. Ensure UI font NotoSansSC-Bold.ttf exists
+#-----------------------------
+echo
+echo ">> Ensuring NotoSansSC-Bold.ttf font for Python UI..."
+
+FONT_SRC="/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+FONT_DST="$WHISPLAY_DIR/python/NotoSansSC-Bold.ttf"
+
+if [ -f "$FONT_SRC" ]; then
+  if [ ! -f "$FONT_DST" ]; then
+    cp "$FONT_SRC" "$FONT_DST"
+    chown pi:pi "$FONT_DST"
+    echo "  - Copied $FONT_SRC -> $FONT_DST"
+  else
+    echo "  - Font already present at $FONT_DST, skipping copy."
+  fi
+else
+  echo "  - WARNING: Source font $FONT_SRC not found; UI may complain about NotoSansSC-Bold.ttf."
+fi
+
