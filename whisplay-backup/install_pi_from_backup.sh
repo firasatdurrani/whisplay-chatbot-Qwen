@@ -136,7 +136,7 @@ echo
 echo ">> Cloning / updating Whisplay repo..."
 
 if [ ! -d "$WHISPLAY_DIR/.git" ]; then
-  sudo -u "$TARGET_USER" git clone ttps://github.com/PiSugar/whisplay-ai-chatbot.git "$WHISPLAY_DIR"
+  sudo -u "$TARGET_USER" git clone https://github.com/PiSugar/whisplay-ai-chatbot.git "$WHISPLAY_DIR"
 else
   echo "  - Repo already exists at $WHISPLAY_DIR, pulling latest..."
   sudo -u "$TARGET_USER" git -C "$WHISPLAY_DIR" pull --ff-only || true
