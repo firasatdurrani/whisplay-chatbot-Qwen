@@ -8,6 +8,18 @@ SSH into a fresh Raspberry Pi OS from a mac and run:
 Install Instructions:
 ***************************************************
 
+First ensure you run updates:
+
+```
+sudo apt update && sudo apt full-upgrade -y
+```
+Then reboot
+
+```
+sudo reboot
+```
+Then use the installer
+
 ```
 sudo apt update && sudo apt install -y git
 cd ~
