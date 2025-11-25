@@ -186,35 +186,36 @@ fi
 #-----------------------------
 echo
 echo ">> Installing Piper TTS binary and voice model..."
+sudo apt update
+sudo apt install -y piper
 
-if ! command -v piper >/dev/null 2>&1; then
-  echo "Installing piper TTS (Debian package)..."
-  sudo apt update
-  sudo apt install -y piper
+# Use the current user's home directory (works for 'pi', 'pi5ai', etc.)
+PIPER_DIR="$HOME/piper"
+PIPER_VOICE_DIR="$PIPER_DIR/voices"
+
+# Ensure Piper directories exist and are owned by the current user
+mkdir -p "$PIPER_VOICE_DIR"
+
+# Symlink the piper binary from wherever it's installed (apt or pip)
+if command -v piper >/dev/null 2>&1; then
+  mkdir -p "$PIPER_DIR"
+  ln -sf "$(command -v piper)" "$PIPER_DIR/piper"
 else
-  echo "  - Piper already installed, skipping."
+  echo "  - WARNING: 'piper' binary not found on PATH even after apt install."
+  echo "    You may need to install it manually or ensure ~/.local/bin is on PATH."
 fi
 
-# Ensure /home/<user>/piper/piper exists for Whisplay code
-mkdir -p "$PIPER_VOICES_DIR"
+# Download the Amy voice model only if missing
+if [ ! -f "$PIPER_VOICE_DIR/en_US-amy-medium.onnx" ]; then
+  echo "  - Downloading Piper voice model (Amy, en_US-medium)..."
+  wget -O "$PIPER_VOICE_DIR/en_US-amy-medium.onnx" \
+    "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx"
 
-PIPER_SYSTEM_BIN="$(command -v piper || true)"
-if [ -n "$PIPER_SYSTEM_BIN" ]; then
-  ln -sf "$PIPER_SYSTEM_BIN" "$PIPER_BIN"
+  wget -O "$PIPER_VOICE_DIR/en_US-amy-medium.onnx.json" \
+    "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json"
+else
+  echo "  - Piper voice model already present, skipping download."
 fi
-
-cd "$PIPER_VOICES_DIR"
-
-if [ ! -f en_US-amy-medium.onnx ]; then
-  echo "Downloading Piper voice: en_US-amy-medium.onnx ..."
-  wget -O en_US-amy-medium.onnx "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx"
-fi
-
-if [ ! -f en_US-amy-medium.onnx.json ]; then
-  echo "Downloading Piper voice config: en_US-amy-medium.onnx.json ..."
-  wget -O en_US-amy-medium.onnx.json "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json"
-fi
-
 
 
 #-----------------------------
