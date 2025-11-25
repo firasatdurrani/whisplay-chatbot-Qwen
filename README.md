@@ -1,7 +1,7 @@
 # 📟 Whisplay-Chatbot-Qwen
 Runs locally with Ollama + Qwen 3.1:7B + Whisper ASR + Piper TTS on a Raspberry Pi 5 with zero cloud dependency.
 
-## Overview
+Overview
 
 This project turns a Raspberry Pi 5 into a fully offline voice chatbot device powered by:
 	•	Local LLM: Qwen 3.1 7B via Ollama
@@ -20,7 +20,7 @@ After installation, the Pi boots straight into a hands-free voice AI device with
 
 It is designed to be run as a plug & play service
 
-##🧰 Hardware Requirements
+🧰 Hardware Requirements
 
 Raspberry Pi 5 (8GB or 16GB) - Required for LLM runtime performance
 Raspberry Pi 5 Active Cooler - Required (installer auto-configures fan)
@@ -30,7 +30,7 @@ USB-C 27W+ Power Supply - Recommended
 MicroSD card (32–64GB+, Class A2) - Faster model loading
 Optional: PiSugar battery pack - For portable usage
 
-##🧪 Software Stack
+🧪 Software Stack
 
 Runtime
 	•	Debian Trixie (64-bit) – Raspberry Pi OS
@@ -68,7 +68,7 @@ chmod +x install_pi_from_backup.sh
 ./install_pi_from_backup.sh
 ```
 
-##▶️ Using the Device
+▶️ Using the Device
 
 `	•	Press the Whisplay button → it listens
 	•	Release → it sends audio to Whisper
