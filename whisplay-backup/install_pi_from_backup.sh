@@ -26,9 +26,10 @@ sudo apt install -y \
   git curl build-essential \
   python3 python3-pip python3-venv \
   ffmpeg sox alsa-utils \
- libportaudio2 libasound2-plugins
- python3-opencv python3-cairosvg \
+  libportaudio2 libasound2-plugins \
+  python3-opencv python3-cairosvg \
   fonts-dejavu-core
+  
 
 #-----------------------------
 # 1.B. Whisplay HAT audio driver (WM8960)
