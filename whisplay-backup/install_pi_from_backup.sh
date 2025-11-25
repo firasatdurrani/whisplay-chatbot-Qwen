@@ -54,7 +54,7 @@ fi
 echo "  - Using user: $TARGET_USER"
 
 TARGET_HOME=$(eval echo "~$TARGET_USER")
-WHISPLAY_DIR="$TARGET_HOME/whisplay-ai-chatbot"
+WHISPLAY_DIR="$TARGET_HOME/whisplay-chatbot-Qwen"
 BACKUP_DIR="$TARGET_HOME/whisplay-backup"
 NVM_DIR="$TARGET_HOME/.nvm"
 
