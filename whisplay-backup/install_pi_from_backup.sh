@@ -92,6 +92,7 @@ fi
 
 # run inside /home/pi/whisplay-ai-chatbot
 yarn install
+yarn build
 
 
 #------------------------------------
