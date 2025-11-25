@@ -1,7 +1,7 @@
 # whisplay-chatbot-Qwen
-Set up a plug and play offline chatbot running Qwen3:1.7b
+Set up a plug and play offline chatbot running Qwen3:1.7b on a raspberry pi
 
-## Plug & Play Pi 5 Chatbot setup
+## Plug & Play Offline Chatbot setup
 
 
 Install Instructions:
