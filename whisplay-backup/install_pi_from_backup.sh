@@ -48,36 +48,51 @@ fi
 nvm alias default 20.19.5
 nvm use 20.19.5
 
-#-----------------------------
+#------------------------------
 # 3. Clone official Whisplay repo
-#-----------------------------
+#------------------------------
 echo
-echo ">> Cloning official whisplay-ai-chatbot repo (if missing)..."
+echo ">> Cloning / updating official whisplay-ai-chatbot repo..."
+
+WHISPLAY_DIR="/home/pi/whisplay-ai-chatbot"
+
 cd "$HOME"
 
-if [ ! -d whisplay-ai-chatbot ]; then
-  git clone https://github.com/PiSugar/whisplay-ai-chatbot.git
+# If the directory exists but is empty or not a git repo, remove it first
+if [ -d "$WHISPLAY_DIR" ] && [ ! -d "$WHISPLAY_DIR/.git" ]; then
+    rm -rf "$WHISPLAY_DIR"
 fi
 
-cd whisplay-ai-chatbot
+# Clone if missing, otherwise update
+if [ ! -d "$WHISPLAY_DIR" ]; then
+    git clone https://github.com/PiSugar/whisplay-ai-chatbot.git "$WHISPLAY_DIR"
+else
+    cd "$WHISPLAY_DIR"
+    git fetch --all
+    git reset --hard origin/main
+fi
 
-#-----------------------------
+cd "$WHISPLAY_DIR"
+
+#------------------------------
 # 4. Node dependencies (yarn)
-#-----------------------------
+#------------------------------
 echo
 echo ">> Installing Node dependencies (yarn)..."
 
 if ! command -v corepack >/dev/null 2>&1; then
-  npm install -g corepack
+    npm install -g corepack
 fi
 
 corepack enable || true
 
 if ! command -v yarn >/dev/null 2>&1; then
-  npm install -g yarn
+    npm install -g yarn
 fi
 
+# run inside /home/pi/whisplay-ai-chatbot
 yarn install
+
 
 #------------------------------------
 # 5. Python dependencies
