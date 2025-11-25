@@ -137,6 +137,44 @@ fi
 
 
 #-----------------------------
+# 5.B. Piper CLI + voice model
+#-----------------------------
+echo
+echo ">> Installing Piper TTS binary and voice model..."
+
+# Install piper CLI from APT if not already present
+if ! command -v piper >/dev/null 2>&1; then
+  sudo apt update
+  sudo apt install -y piper
+else
+  echo "  - Piper CLI already installed, skipping apt install."
+fi
+
+# Ensure expected directory layout
+mkdir -p /home/pi/piper/voices
+
+# Symlink the piper binary to the hard-coded path Whisplay expects
+if [ ! -e /home/pi/piper/piper ]; then
+  ln -sf "$(command -v piper)" /home/pi/piper/piper
+  echo "  - Symlinked piper -> $(command -v piper)"
+fi
+
+# Download the Amy voice model only if missing
+cd /home/pi/piper/voices
+
+if [ ! -f en_US-amy-medium.onnx ]; then
+  wget -O en_US-amy-medium.onnx \
+    https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx
+fi
+
+if [ ! -f en_US-amy-medium.onnx.json ]; then
+  wget -O en_US-amy-medium.onnx.json \
+    https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json
+fi
+
+
+
+#-----------------------------
 # 6. Restore your backed-up config from GitHub repo
 #-----------------------------
 echo
