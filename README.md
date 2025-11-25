@@ -3,6 +3,10 @@ Set up a plug and play offline chatbot running Qwen3:1.7b
 
 ## Fresh Pi setup From Macbook
 
+*IMPORTANT*
+
+Ensure that your raspberry username is pi
+
 SSH into a fresh Raspberry Pi OS from a mac and run:
 
 Install Instructions:
