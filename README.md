@@ -1,18 +1,18 @@
 # whisplay-chatbot-Qwen
 Set up a plug and play offline chatbot running Qwen3:1.7b
 
-## Fresh Pi setup From Macbook
+## Fresh Pi 5 Chatbot setup
 
 *IMPORTANT*
 
 Ensure that your raspberry username is pi
 
-SSH into a fresh Raspberry Pi OS from a mac and run:
+SSH into a fresh Raspberry Pi 5 OS running Debian Trixie OS
 
 Install Instructions:
 ***************************************************
 
-First use the installer
+Just Paste This Command
 
 ```
 sudo apt update && sudo apt install -y git
