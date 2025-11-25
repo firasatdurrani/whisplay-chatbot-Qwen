@@ -28,9 +28,36 @@ sudo apt install -y \
   ffmpeg sox alsa-utils \
  libportaudio2 libasound2-plugins
 
+#-----------------------------
+# 1.B. Whisplay HAT audio driver (WM8960)
+#-----------------------------
+echo
+echo ">> Installing / updating Whisplay HAT audio driver (WM8960)..."
+
+WHISPLAY_HAT_DIR="$HOME/Whisplay"
+
+# Clone or update the HAT driver repo
+if [ ! -d "$WHISPLAY_HAT_DIR" ]; then
+  git clone https://github.com/PiSugar/Whisplay.git --depth 1 "$WHISPLAY_HAT_DIR"
+else
+  cd "$WHISPLAY_HAT_DIR"
+  git pull --rebase || true
+fi
+
+cd "$WHISPLAY_HAT_DIR/Driver"
+
+if [ -f install_wm8960_drive.sh ]; then
+  sudo bash install_wm8960_drive.sh
+else
+  echo "  - WARNING: install_wm8960_drive.sh not found in $WHISPLAY_HAT_DIR/Driver"
+fi
+
+cd "$HOME"
+echo "  - Whisplay HAT driver install complete (reboot required for card to appear)."
+
 
 #-----------------------------
-# 1.B Install Ollama + model
+# 1.C Install Ollama + model
 #-----------------------------
 echo
 echo ">> Installing Ollama (ARM64) if missing..."
