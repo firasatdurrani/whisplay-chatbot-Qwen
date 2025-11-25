@@ -7,7 +7,7 @@ echo "=== Whisplay Pi bootstrap (from backup) ==="
 # 0. Basic sanity checks
 #-----------------------------
 if [ "$(id -u)" -eq 0 ]; then
-  echo "Run this as the 'pi' user, not as root."
+  echo "Run this as a normal non-root user (e.g. 'pi')."
   exit 1
 fi
 
@@ -15,6 +15,17 @@ if ! command -v sudo >/dev/null 2>&1; then
   echo "This script assumes 'sudo' is available."
   exit 1
 fi
+
+# Normalize user + home for all paths
+PI_USER="${PI_USER:-${SUDO_USER:-$(whoami)}}"
+PI_HOME="${PI_HOME:-$HOME}"
+
+WHISPLAY_DIR="$PI_HOME/whisplay-ai-chatbot"
+WHISPLAY_BACKUP_DIR="$PI_HOME/whisplay-chatbot-Qwen/whisplay-backup"
+
+PIPER_DIR="$PI_HOME/piper"
+PIPER_BIN="$PIPER_DIR/piper"
+PIPER_VOICES_DIR="$PIPER_DIR/voices"
 
 #-----------------------------
 # 1. System packages
@@ -176,34 +187,32 @@ fi
 echo
 echo ">> Installing Piper TTS binary and voice model..."
 
-# Install piper CLI from APT if not already present
 if ! command -v piper >/dev/null 2>&1; then
+  echo "Installing piper TTS (Debian package)..."
   sudo apt update
   sudo apt install -y piper
 else
-  echo "  - Piper CLI already installed, skipping apt install."
+  echo "  - Piper already installed, skipping."
 fi
 
-# Ensure expected directory layout
-mkdir -p /home/pi/piper/voices
+# Ensure /home/<user>/piper/piper exists for Whisplay code
+mkdir -p "$PIPER_VOICES_DIR"
 
-# Symlink the piper binary to the hard-coded path Whisplay expects
-if [ ! -e /home/pi/piper/piper ]; then
-  ln -sf "$(command -v piper)" /home/pi/piper/piper
-  echo "  - Symlinked piper -> $(command -v piper)"
+PIPER_SYSTEM_BIN="$(command -v piper || true)"
+if [ -n "$PIPER_SYSTEM_BIN" ]; then
+  ln -sf "$PIPER_SYSTEM_BIN" "$PIPER_BIN"
 fi
 
-# Download the Amy voice model only if missing
-cd /home/pi/piper/voices
+cd "$PIPER_VOICES_DIR"
 
 if [ ! -f en_US-amy-medium.onnx ]; then
-  wget -O en_US-amy-medium.onnx \
-    https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx
+  echo "Downloading Piper voice: en_US-amy-medium.onnx ..."
+  wget -O en_US-amy-medium.onnx "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx"
 fi
 
 if [ ! -f en_US-amy-medium.onnx.json ]; then
-  wget -O en_US-amy-medium.onnx.json \
-    https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json
+  echo "Downloading Piper voice config: en_US-amy-medium.onnx.json ..."
+  wget -O en_US-amy-medium.onnx.json "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json"
 fi
 
 
@@ -227,7 +236,15 @@ fi
 # systemd service
 if [ -f "$BACKUP_DIR/whisplay.service.txt" ]; then
   sudo cp "$BACKUP_DIR/whisplay.service.txt" /etc/systemd/system/whisplay.service
-  echo "  - Installed /etc/systemd/system/whisplay.service"
+
+  # Normalize user and paths inside the service file
+  sudo sed -i \
+    -e "s#/home/pi/whisplay-ai-chatbot#$WHISPLAY_DIR#g" \
+    -e "s#/home/pi/#$PI_HOME/#g" \
+    -e "s/User=pi/User=$PI_USER/g" \
+    /etc/systemd/system/whisplay.service
+
+  echo "  - Installed /etc/systemd/system/whisplay.service (user=$PI_USER, dir=$WHISPLAY_DIR)"
 fi
 
 # (Optional) piper model path info lands where you want it
@@ -266,8 +283,8 @@ FONT_DST="$WHISPLAY_DIR/python/NotoSansSC-Bold.ttf"
 
 if [ -f "$FONT_SRC" ]; then
   if [ ! -f "$FONT_DST" ]; then
-    cp "$FONT_SRC" "$FONT_DST"
-    chown pi:pi "$FONT_DST"
+     cp "$FONT_SRC" "$FONT_DST"
+    chown "$PI_USER:$PI_USER" "$FONT_DST"
     echo "  - Copied $FONT_SRC -> $FONT_DST"
   else
     echo "  - Font already present at $FONT_DST, skipping copy."
