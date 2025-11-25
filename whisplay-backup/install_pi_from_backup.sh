@@ -28,6 +28,28 @@ sudo apt install -y \
   ffmpeg sox alsa-utils \
   libportaudio2
 
+
+#-----------------------------
+# 1.B Install Ollama + model
+#-----------------------------
+echo
+echo ">> Installing Ollama (ARM64) if missing..."
+
+if ! command -v ollama >/dev/null 2>&1; then
+  curl -fsSL https://ollama.com/install.sh | sh
+else
+  echo "  - Ollama already installed, skipping."
+fi
+
+echo
+echo ">> Ensuring Qwen model is downloaded..."
+
+# Change qwen2:1.5b to whatever tag you actually use
+if ! ollama list | awk '{print $1}' | grep -q '^qwen3:1.7b$'; then
+  ollama pull qwen3:1.7b
+fi
+
+
 #-----------------------------
 # 2. Install nvm + Node 20.19.5
 #-----------------------------
