@@ -1,4 +1,4 @@
-# specify the ASR、LLM and TTS server to use
+## Core servers
 # options: openai, gemini, tencent, volcengine, whisper, vosk
 ASR_SERVER=WHISPER 
 
@@ -8,93 +8,8 @@ LLM_SERVER=OLLAMA
 # options: openai, gemini, tencent, volcengine, piper
 TTS_SERVER=PIPER
 
-# specify the image generation server to use, the generated images will be saved in the data/images folder
 # options: openai, gemini, volcengine
 IMAGE_GENERATION_SERVER=openai
-
-# specify the vision model for image understanding tasks
-# options: openai, gemini, volcengine, ollama
-# VISION_SERVER=ollama
-
-## Pi Camera
-# if you want to enable the Pi Camera for image capture (double click the button in idle status to enter) uncomment the following line:
-# ENABLE_CAMERA=true
-
-# specify the chat history reset time in seconds, default is 5 minutes (300 seconds)
-# CHAT_HISTORY_RESET_TIME=300
-
-# if you want to clean the data folder on each start, set the following environment variable to true
-# CLEAN_DATA_FOLDER_ON_START=true
-
-# enable or disable thinking of LLM
-# if you are using ollama as LLM server, please confirm that the model supports thinking before enabling this option
-# otherwise the ollama will return a 400 error
-ENABLE_THINKING=false
-
-
-## Tencent Cloud ASR and TTS
-# if you are using tencent cloud as ASR or TTS server, please set the following environment variables
-TENCENT_SECRET_ID=YourSecretId
-TENCENT_SECRET_KEY=YourSecretKey
-# endpoint is optional, default is asr.tencentcloudapi.com for ASR and tts.tencentcloudapi.com for TTS
-# TENCENT_ASR_ENDPOINT=asr.tencentcloudapi.com
-# TENCENT_TTS_ENDPOINT=tts.tencentcloudapi.com
-
-## ByteDance VolcEngine ASR and TTS
-
-# if you are using volcengine as ASR or TTS server, please set the following environment variables
-# VOLCENGINE_APP_ID=volcengine_app_id
-VOLCENGINE_ACCESS_TOKEN=volcengine_access_token
-
-# You can choose different voice types and LLM models, please refer to the official documentation for more details:
-# https://www.volcengine.com/docs/6561/1257544
-# VOLCENGINE_VOICE_TYPE=zh_female_wanwanxiaohe_moon_bigtts
-
-## ByteDance Doubao LLM
-# if you are using volcengine as LLM server, please set the following environment variables
-VOLCENGINE_DOUBAO_ACCESS_TOKEN=volcengine_doubao_access_token
-
-# the default model is doubao-1-5-lite-16k-250115, you can also choose other models
-# VOLCENGINE_DOUBAO_LLM_MODEL=doubao-1-5-lite-32k-250115
-# for image generation, the default model is doubao-seedream-3-0-t2i-250415, you can also choose other models. If you need image input support, please choose 'doubao-seededit-3-0-i2i-250628'
-# VOLCENGINE_DOUBAO_IMAGE_MODEL=doubao-seedream-3-0-t2i-250415
-# for vision tasks, the default model is doubao-seed-1-6-flash-250828, you can also choose other models
-# VOLCENGINE_DOUBAO_VISION_MODEL=doubao-seed-1-6-flash-250828
-
-## Google Gemini
-# if you are using google gemini as ASR / LLM / TTS / IMAGE_GENERATION server, please set the following environment variables
-# Google Cloud has 300$ free credit for new users, you can use it to try the gemini api
-# get your API key from https://console.cloud.google.com/apis/credentials, and make sure to enable the Generative Language API for your project
-# also ensure the API key has the permission to access the Generative Language API
-GEMINI_API_KEY=your_api_key
-# the default model is gemini-2.5-flash (for ASR and LLM), you can also choose other models
-# GEMINI_MODEL=gemini-2.5-flash
-# for TTS, the default voice is "gemini-2.5-pro-preview-tts", you can also choose other voices, please refer to: https://ai.google.dev/gemini-api/docs/speech-generation
-# GEMINI_TTS_MODEL=gemini-2.5-flash-preview-tts
-# the default speaker is "Callirrhoe", you can also choose other speakers, please refer to:https://ai.google.dev/gemini-api/docs/speech-generation#voices
-# GEMINI_TTS_SPEAKER=Callirrhoe
-# the default language code is "en-US", you can also choose other language codes, please refer to https://ai.google.dev/gemini-api/docs/speech-generation#languages
-# GEMINI_TTS_LANGUAGE_CODE=en-US
-# for vision tasks, the default model is "gemini-2.5-flash", you can also choose other models, please refer to: https://ai.google.dev/gemini-api/docs/vision.
-# GEMINI_VISION_MODEL=gemini-2.5-flash
-
-## Gemini Image Generation
-# for image generation, the default model is "gemini-2.5-flash-image", you can also choose other models, please refer to: https://ai.google.dev/gemini-api/docs/image-generation
-GEMINI_IMAGE_MODEL=gemini-2.5-flash-image
-
-## OpenAI
-# if you are using openai as ASR、TTS or LLM server, please set the following environment variables
-OPENAI_API_KEY=openai_api_key
-# the default model is gpt-4o, you can also choose other models
-# OPENAI_LLM_MODEL=gpt-4o
-# if you are using other openai compatible api server, please set the following environment variables
-# OPENAI_API_BASE_URL=https://api.openai.com/v2
-# if you are using openai as image generation server, please specify the generation model below. The default model is "dall-e-3". if you want to use "gpt-image-1", your organization need to be verified by openai first.
-# Document link: https://platform.openai.com/docs/guides/image-generation
-# if you need image input support, please choose models other than "dall-e-3" / "dall-e-2", such as "gpt-image-1", please refer to https://platform.openai.com/docs/guides/images-vision
-OPENAI_IMAGE_MODEL=dall-e-3
-# if you are using openai as VISION_SERVER, specify the vision model for openai image understanding tasks, if not set, the default model will be the same as OPENAI_LLM_MODEL model
-# OPENAI_VISION_MODEL=gpt-4o
 
 ## Grok
 # if you are using grok as LLM server, please set the following environment variables
@@ -103,16 +18,15 @@ GROK_API_KEY=your_grok_api_key
 # GROK_LLM_MODEL=grok-4-latest
 
 ## Ollama
-# if you are using ollama as LLM server, please set the following environment variables
+# local Ollama endpoint and model used by Whisplay
 OLLAMA_ENDPOINT=http://localhost:11434
-# the default model is deepseek-r1:1.5b, you can also choose other models, please refer to: https://ollama.com/library
+# the default model is qwen3:1.7b, change if you like
 OLLAMA_MODEL=qwen3:1.7b
-# if you want to enable tools for ollama, uncomment the following line (make sure the model supports tools, otherwise it will return a 400 error):
+# start/stop ollama automatically from run_chatbot.sh
+SERVE_OLLAMA=true
+# if you want to enable tools for ollama, uncomment the following line (make sure the model supports tools)
 # OLLAMA_ENABLE_TOOLS=true
-# if the ollama server is running on the same device, you can choose to serve ollama automatically when starting the chatbot, uncomment the following line:
-#SERVE_OLLAMA=true
 # if you are using ollama as VISION_SERVER, specify the vision model for ollama image understanding tasks, default is qwen3-vl:2b
-# please refer to https://ollama.com/library for more details
 # OLLAMA_VISION_MODEL=qwen3-vl:2b
 
 ## Proxy Settings
@@ -124,18 +38,19 @@ OLLAMA_MODEL=qwen3:1.7b
 
 ## Custom System Prompt
 # you can set a custom system prompt for LLM, please uncomment the following line and set your own prompt
-# SYSTEM_PROMPT="You are a happy girl and also a helpful assistant. Answer the question quickly in less than 5 sentences, also with a sense of humor."
+# SYSTEM_PROMPT="You are a helpful assistant. Answer concisely in English."
 
 ## Piper TTS
-# if you are using piper as TTS server, please set the following environment variables
 # Piper is an open-source TTS engine that can run locally on your device
-# You can download Piper binaries for RPi from: https://github.com/OHF-Voice/piper1-gpl/blob/387ca06bfd0e7557c6d0d54ce34d36e7bb28389a/docs/CLI.md
-# Voice models can be found at: https://rhasspy.github.io/piper-samples/
-#PIPER_BINARY_PATH=/path/to/piper-binary
-#PIPER_MODEL_PATH=/path/to/piper/voice/model.onnx
+# PIPER_EXE must point to the actual binary that works from your shell
 PIPER_EXE=/home/pi/.local/bin/piper
-PIPER_VOICES_DIR=/home/pi/piper/models
-PIPER_VOICE=en_GB-semaine-medium
+
+# IMPORTANT: this must match where the installer (and you) put the voices
+# You are downloading:
+#   /home/pi/piper/voices/en_US-amy-medium.onnx
+#   /home/pi/piper/voices/en_US-amy-medium.onnx.json
+PIPER_VOICES_DIR=/home/pi/piper/voices
+PIPER_VOICE=en_US-amy-medium
 
 ## Vosk ASR
 # if you are using vosk as ASR server, please set the following environment variables
@@ -145,11 +60,51 @@ PIPER_VOICE=en_GB-semaine-medium
 VOSK_MODEL_PATH=/path/to/vosk/model
 
 ## Whisper ASR
-# if you are using whisper as ASR server, please set the following environment variables
 # Whisper is an open-source ASR engine that can run locally on your device
 # https://github.com/openai/whisper
-# the default model size is tiny, you can also choose other model sizes: tiny, base, small, medium, large. The tiny model will take ~1GB of VRAM
+# the default model size is tiny, you can also choose other model sizes: tiny, base, small, medium, large.
 WHISPER_MODEL_SIZE=tiny
-# the default language is English, if you leave it empty, whisper will try to detect the language automatically, but it will take more time.
+# If you want to force English output and avoid Arabic, uncomment the next line:
 # WHISPER_LANGUAGE=English
 
+## Chat history and data
+# specify the chat history reset time in seconds, default is 5 minutes (300 seconds)
+# CHAT_HISTORY_RESET_TIME=300
+
+# if you want to clean the data folder on each start, set the following environment variable to true
+# CLEAN_DATA_FOLDER_ON_START=true
+
+# enable or disable thinking of LLM
+# if you are using ollama as LLM server, please confirm that the model supports thinking before enabling this option
+# otherwise ollama will return a 400 error
+ENABLE_THINKING=false
+
+## Pi Camera
+# if you want to enable the Pi Camera for image capture (double click the button in idle status to enter) uncomment the following line:
+# ENABLE_CAMERA=true
+
+## Tencent Cloud ASR and TTS
+# if you are using tencent cloud as ASR or TTS server, please set the following environment variables
+TENCENT_SECRET_ID=YourSecretId
+TENCENT_SECRET_KEY=YourSecretKey
+# endpoint is optional, default is asr.tencentcloudapi.com for ASR and tts.tencentcloudapi.com for TTS
+# TENCENT_ASR_ENDPOINT=asr.tencentcloudapi.com
+# TENCENT_TTS_ENDPOINT=tts.tencentcloudapi.com
+
+## ByteDance VolcEngine ASR and TTS
+# if you are using volcengine as ASR or TTS server, please set the following environment variables
+# VOLCENGINE_APP_ID=volcengine_app_id
+VOLCENGINE_ACCESS_TOKEN=volcengine_access_token
+# VOLCENGINE_VOICE_TYPE=zh_female_wanwanxiaohe_moon_bigtts
+
+## ByteDance Doubao LLM
+# if you are using volcengine as LLM server, please set the following environment variables
+VOLCENGINE_DOUBAO_ACCESS_TOKEN=volcengine_doubao_access_token
+# VOLCENGINE_DOUBAO_LLM_MODEL=doubao-1-5-lite-32k-250115
+# VOLCENGINE_DOUBAO_IMAGE_MODEL=doubao-seedream-3-0-t2i-250415
+# VOLCENGINE_DOUBAO_VISION_MODEL=doubao-seed-1-6-flash-250828
+
+## Google Gemini
+# if you are using google gemini as ASR / LLM / TTS / IMAGE_GENERATION server, please set the following environment variables
+GEMINI_API_KEY=your_api_key
+# GEMINI_MODEL=
