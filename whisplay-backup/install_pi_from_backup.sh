@@ -119,12 +119,13 @@ nvm use 20.19.5
 echo
 echo ">> Configuring ALSA to use Whisplay HAT (card 2) as default..."
 
-sudo -u "$TARGET_USER" aplay -l || true
+# Just list playback devices; don't depend on TARGET_USER here
+aplay -l || true
 
 if aplay -l | grep -q "card 2: wm8960soundcard"; then
   echo "  - Detected Whisplay HAT as card 2, writing /etc/asound.conf..."
 
-  sudo tee /etc/asound.conf >/dev/null <<EOF
+  sudo tee /etc/asound.conf >/dev/null <<'EOF'
 defaults.pcm.card 2
 defaults.ctl.card 2
 
@@ -142,9 +143,6 @@ else
   echo "  - WARNING: Whisplay HAT not detected as card 2."
   echo "  - Please run 'aplay -l' and adjust /etc/asound.conf manually if needed."
 fi
-
-
-
 
 #------------------------------
 # 3. Clone official Whisplay repo
