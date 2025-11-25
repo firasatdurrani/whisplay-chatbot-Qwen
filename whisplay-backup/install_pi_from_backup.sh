@@ -26,7 +26,7 @@ sudo apt install -y \
   git curl build-essential \
   python3 python3-pip python3-venv \
   ffmpeg sox alsa-utils \
-  libportaudio2
+ libportaudio2 libasound2-plugins
 
 
 #-----------------------------
