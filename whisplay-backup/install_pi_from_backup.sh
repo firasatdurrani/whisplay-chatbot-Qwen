@@ -79,18 +79,24 @@ fi
 
 yarn install
 
-#-----------------------------
+#------------------------------------
 # 5. Python dependencies
-#-----------------------------
+#------------------------------------
+
 echo
-echo ">> Installing Python deps (whisper, etc.)..."
-python3 -m pip install --user --upgrade pip
-python3 -m pip install --user openai-whisper
+echo ">> Installing Python deps (whisper, TTS, etc.)..."
+
+# Install globally, bypassing the Debian guard (Bookworm)
+python3 -m pip install --upgrade pip --break-system-packages
+
+# Core packages: STT (whisper) + TTS (piper-tts) + audio I/O (soundfile)
+python3 -m pip install --break-system-packages openai-whisper piper-tts soundfile
 
 # If the official project has a requirements file, install that too
 if [ -f requirements.txt ]; then
-  python3 -m pip install --user -r requirements.txt
+    python3 -m pip install --break-system-packages -r requirements.txt
 fi
+
 
 #-----------------------------
 # 6. Restore your backed-up config from GitHub repo
