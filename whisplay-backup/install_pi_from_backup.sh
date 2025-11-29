@@ -331,3 +331,96 @@ else
   echo "  - WARNING: Source font $FONT_SRC not found; UI may complain about NotoSansSC-Bold.ttf."
 fi
 
+
+#-----------------------------
+# 9. Boot + Ready chimes (Whisplay HAT, card 2)
+#-----------------------------
+echo
+echo ">> Setting up boot and ready chimes (card 2, plughw:2,0)..."
+
+BOOT_SOUNDS_DIR="/home/$TARGET_USER/boot-sounds"
+sudo -u "$TARGET_USER" mkdir -p "$BOOT_SOUNDS_DIR"
+
+# Generate simple stereo WAVs for boot and ready chimes using only stdlib
+sudo -u "$TARGET_USER" python3 - << 'EOF'
+import os, math, struct, wave
+
+base = os.path.expanduser("~/boot-sounds")
+os.makedirs(base, exist_ok=True)
+
+def make_beep(path, rate=48000, duration=0.4, freqs=(987.8,)):
+    nframes = int(rate * duration)
+    with wave.open(path, "w") as wf:
+        wf.setnchannels(2)       # stereo
+        wf.setsampwidth(2)       # 16-bit
+        wf.setframerate(rate)
+        for i in range(nframes):
+            t = i / rate
+            sample = sum(math.sin(2 * math.pi * f * t) for f in freqs) / len(freqs)
+            # simple fade in/out to avoid clicks
+            edge = int(rate * 0.01)
+            if i < edge:
+                sample *= i / edge
+            if i > nframes - edge:
+                sample *= (nframes - i) / edge
+            sample = max(-0.9, min(0.9, sample))
+            val = int(sample * 32767)
+            data = struct.pack("<hh", val, val)
+            wf.writeframesraw(data)
+
+def make_ready(path, rate=48000, duration=0.8, freq1=987.8, freq2=1318.5):
+    nframes = int(rate * duration)
+    half = nframes // 2
+    with wave.open(path, "w") as wf:
+        wf.setnchannels(2)
+        wf.setsampwidth(2)
+        wf.setframerate(rate)
+        for i in range(nframes):
+            t = i / rate
+            f = freq1 if i < half else freq2
+            s = math.sin(2 * math.pi * f * t)
+            edge = int(rate * 0.01)
+            if i < edge:
+                s *= i / edge
+            if i > nframes - edge:
+                s *= (nframes - i) / edge
+            s = max(-0.9, min(0.9, s))
+            val = int(s * 32767)
+            data = struct.pack("<hh", val, val)
+            wf.writeframesraw(data)
+
+make_beep(os.path.join(base, "boot-chime.wav"))
+make_ready(os.path.join(base, "ready-chime.wav"))
+EOF
+
+# Boot chime: plays once when system reaches multi-user.target
+sudo tee /etc/systemd/system/boot-chime.service >/dev/null << 'EOF'
+[Unit]
+Description=Boot Chime
+After=sound.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/aplay -D plughw:2,0 /home/pi/boot-sounds/boot-chime.wav
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Ready chime: plays after Whisplay is up, with a small delay
+sudo tee /etc/systemd/system/ready-chime.service >/dev/null << 'EOF'
+[Unit]
+Description=Ready Chime after Whisplay startup
+After=whisplay.service sound.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -lc 'sleep 15; /usr/bin/aplay -D plughw:2,0 /home/pi/boot-sounds/ready-chime.wav || true'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable both chimes for next boot
+sudo systemctl daemon-reload
+sudo systemctl enable boot-chime.service ready-chime.service
